@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,41 +24,43 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.Map;
 import java.util.Random;
 
 public class RandomSentenceSpout extends BaseRichSpout {
-  SpoutOutputCollector _collector;
-  Random _rand;
+    SpoutOutputCollector _collector;
+    Random _rand;
 
 
-  @Override
-  public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-    _collector = collector;
-    _rand = new Random();
-  }
+    @Override
+    public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
+        _collector = collector;
+        _rand = new Random();
+    }
 
-  @Override
-  public void nextTuple() {
-    Utils.sleep(100);
-    String[] sentences = new String[]{ "the cow jumped over the moon", "an apple a day keeps the doctor away",
-        "four score and seven years ago", "snow white and the seven dwarfs", "i am at two with nature" };
-    String sentence = sentences[_rand.nextInt(sentences.length)];
-    _collector.emit(new Values(sentence));
-  }
+    @Override
+    public void nextTuple() {
+        Utils.sleep(100);
+        String[] sentences = new String[]{"the cow jumped over the moon", "an apple a day keeps the doctor away",
+                "four score and seven years ago", "snow white and the seven dwarfs", "i am at two with nature"};
+        String sentence = sentences[_rand.nextInt(sentences.length)];
+        _collector.emit(new Values(sentence));
+    }
 
-  @Override
-  public void ack(Object id) {
-  }
+    @Override
+    public void ack(Object id) {
+    }
 
-  @Override
-  public void fail(Object id) {
-  }
+    @Override
+    public void fail(Object id) {
+        System.out.println("failed msg : "+JSONObject.toJSONString(id));
+    }
 
-  @Override
-  public void declareOutputFields(OutputFieldsDeclarer declarer) {
-    declarer.declare(new Fields("word"));
-  }
+    @Override
+    public void declareOutputFields(OutputFieldsDeclarer declarer) {
+        declarer.declare(new Fields("word"));
+    }
 
 }

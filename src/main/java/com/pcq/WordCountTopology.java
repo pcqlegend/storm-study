@@ -66,9 +66,14 @@ public class WordCountTopology {
         public void execute(Tuple input, BasicOutputCollector collector) {
             String sentence = input.getStringByField("word");
             String[] words = sentence.split(" ");
+            try {
+                Thread.sleep(31000);
+            } catch (InterruptedException e) {
+
+            }
             for (String word : words) {
                 //发送单词
-                collector.emit(new Values(word));
+                collector.emit(input.getSourceStreamId(),new Values(word));
             }
         }
     }
